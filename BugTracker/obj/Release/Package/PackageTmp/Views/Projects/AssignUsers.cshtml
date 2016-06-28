@@ -1,0 +1,50 @@
+﻿@model BugTracker.Models.ProjectUserViewModel
+@{
+    ViewBag.Title = "AssignUsers";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+
+
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Assign users to: </h4>
+                        <p class="category">@Model.Project.Name</p>
+                    </div>
+                    @using (Html.BeginForm("AssignUsers", "Projects", FormMethod.Post))
+            {
+                        @Html.HiddenFor(model => model.Project.Id)
+                        <div class="form-group">
+                            <div class="col-md-6" style="width: 200px;">
+                                @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { @class = "chosen-select", @style = "width:200px;" })
+                            </div>
+                            <div class="col-md-offset-6">
+                                <input type="submit" value="Save" class="btn btn-default" />
+                            </div>
+                        </div>
+                    }
+
+                    <hr style="width: 95%; margin-top: 40px;">
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*</div>
+        </div>*@
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(window).load(function () {
+            $(".chosen-select").chosen()
+        });
+    </script>
+}

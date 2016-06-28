@@ -1,0 +1,155 @@
+﻿@model IEnumerable<BugTracker.Models.Tickets>
+
+@{
+    ViewBag.Title = "Index";
+}
+@*@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}*@
+@*<h2>Tickets</h2>*@
+
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Tickets</h4>
+                        <p class="category">List of all tickets</p>
+                    </div>
+                    <div class="content">
+                        @if (User.IsInRole("Submitter"))
+                        {
+                        <p>
+                            @Html.ActionLink("Create New", "Create", "Tickets")
+                        </p>
+                        }
+                        <table class="table myTable table-striped table-bordered table-responsive" style="width: 100%;" cellspacing="0" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Project.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketPriority.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketStatus.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.TicketType.Name)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Title)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Description)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Created)
+                                    </th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.Updated)
+                                    </th>
+                                    <th>
+                                        Owner
+                                        @*@Html.DisplayNameFor(model => model.OwnerUserId)*@
+                                    </th>
+                                    <th>
+                                        Assignee
+                                        @*@Html.DisplayNameFor(model => model.AssignedToUserId)*@
+                                    </th>
+                                    <th> Actions </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Project.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TicketType.Name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Title)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Description)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Created.LocalDateTime)
+                                        </td>
+                                        @if (item.Updated != null)
+                                        {
+                                            <td>
+                                                @item.Updated.Value.LocalDateTime
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                        <td></td>
+                                        }                                        
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OwnerUser.DisplayName)
+                                        </td>
+                                        <td>                                           
+                                            @Html.DisplayFor(modelItem => item.AssignedToUser.DisplayName)
+                                        </td>
+                                        @if (User.IsInRole("Admin"))
+                                                {
+                                            <td>
+                                                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+</td>}
+                                        else if (User.IsInRole("Project Manager") || User.IsInRole("Developer"))
+                                        {
+                                            <td>@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                                            @Html.ActionLink("Details", "Details", new { id = item.Id }) 
+                                            </td>
+                                        }else
+                                        {
+                                            <td>@Html.ActionLink("Details", "Details", new { id = item.Id })</td>
+                                        }
+                                    </tr>
+
+                                }
+                            </tbody>
+
+                        </table>
+                        @*<div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Open
+                                <i class="fa fa-circle text-danger"></i> Bounce
+                                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                            </div>
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+           
+
+            @section Scripts{
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#myTable').DataTable();
+                    });
+                </script>
+            }

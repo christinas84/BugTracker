@@ -1,0 +1,192 @@
+﻿@model BugTracker.Models.Projects
+
+@{
+    ViewBag.Title = "Details";
+}
+@*@{
+        Layout = "~/Views/Shared/_Layout.cshtml";
+
+    }
+    <h2>Details</h2>*@
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">@Model.Name</h4>
+                        <p class="category">Details for this project</p>
+                    </div>
+                    <div class="content">
+                        <div>
+                            <hr />
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Name)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Name)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Created)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Created.LocalDateTime)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Description)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Description)
+                                </dd>
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Users)
+                                </dt>
+                                @foreach (var user in Model.Users)
+                                {
+                                    <dd>
+                                        @Html.DisplayFor(model => user.FullName)
+                                    </dd>
+                                }
+                            </dl>
+
+
+                        </div>
+
+                        <p>
+                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                            @Html.ActionLink("Back to List", "Index")
+                        </p>
+                        @*<div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Open
+                                <i class="fa fa-circle text-danger"></i> Bounce
+                                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                            </div>
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*</div>
+    </div>
+</div>*@
+@*</div>*@
+@*<div class="content">
+    <div class="container-fluid">*@
+        <div class="row">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Tickets</h4>
+                        <p class="category">List of tickets for this project</p>
+                    </div>
+                    <div class="content">
+                        <p>
+                            @Html.ActionLink("Create New Ticket", "Create", "Tickets", new { id = Model.Id }, null)
+                        </p>
+                        <div class="container col-md-12">
+                            <table class="table myTable table-striped table-bordered table-responsive" style="width: 100%;" cellspacing="0" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Created</th>
+                                        <th>Updated</th>
+                                        <th>Description</th>
+                                        <th>Owner</th>
+                                        <th>Assignee</th>
+                                        <th>Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ticket in Model.Ticket)
+            {
+                                        <tr>
+                                            <td>@ticket.Title</td>
+                                            @if (ticket.TicketPriority.Name == "Essential")
+                {
+                                                <td><i class="fa fa-exclamation-triangle" style="color: red;"></i>@ticket.TicketPriority.Name</td>
+
+                                            }
+                                            else if (ticket.TicketPriority.Name == "Desirable")
+                                            {
+                                                <td><i class="fa fa-exclamation-circle" style="color: orange;"></i>@ticket.TicketPriority.Name</td>
+
+                                            }
+                                            else
+                                            {
+                                                <td><i class="fa fa-exclamation" style="color: yellow;"></i>@ticket.TicketPriority.Name</td>
+                                            }
+                                            <td>@ticket.TicketStatus.Name</td>
+                                            <td>@ticket.Created.LocalDateTime</td>
+                                            @if (ticket.Updated != null)
+                                            {
+                                                <td>
+                                                    @ticket.Updated.Value.LocalDateTime
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                            <td>@ticket.Description</td>
+                                            <td>@ticket.OwnerUser.DisplayName</td>
+                                            @if (ticket.AssignedToUserId != null)
+                                            {
+                                            <td>@ticket.AssignedToUser.DisplayName</td>
+                                            }
+                                            else
+                                            {
+                                                <td></td>
+                                            }
+                                            <td>@Html.ActionLink("Details", "Details", "Tickets", new { id = ticket.Id }, null)</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}
+
+
+
+
+
+

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<BugTracker.Models.UserRolesViewModel>
+@{
+    ViewBag.Title = "UserIndex";
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+@*<h2>List of registered users</h2>*@
+
+
+
+
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Users</h4>
+                        <p class="category">List of registered users</p>
+                    </div>
+                    <div class="content">
+                        <table class="table" id="myTable">
+                            <thead>
+                                <tr>
+                                    <th>@Html.DisplayNameFor(model => model.User.FirstName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.User.LastName)</th>
+                                    @*<th>@Html.DisplayNameFor(model => model.User.DisplayName)</th>*@
+                                    <th>@Html.DisplayNameFor(model => model.Roles)</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => user.User.FirstName)</td>
+                                        <td>@Html.DisplayFor(modelItem => user.User.LastName)</td>
+                                        @*<td>@Html.DisplayFor(modelItem => user.User.DisplayName)</td>*@
+                                        <td>
+                                            @foreach (var role in user.Roles)
+                                            {
+                                                <p>@role</p>
+                                            }
+                                        </td>
+                                        <td>@Html.ActionLink("Assign Roles", "EditUser", "Admin", new { id = user.User.Id }, null)</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        @*<div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Open
+                                <i class="fa fa-circle text-danger"></i> Bounce
+                                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                            </div>
+                            <hr>
+                            <div class="stats">
+                                <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                            </div>
+                        </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#myTable').DataTable();
+                    });
+    </script>
+}
+
+
+
+
+

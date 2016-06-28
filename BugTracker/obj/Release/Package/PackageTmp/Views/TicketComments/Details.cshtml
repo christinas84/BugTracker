@@ -1,0 +1,137 @@
+﻿@model BugTracker.Models.TicketComments
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Projects</h4>
+                        <p class="category">Click here for a list of all projects</p>
+                    </div>
+                    <div class="content">
+                        <div>
+                            <h4>TicketComments</h4>
+                            <hr />
+                            <dl class="dl-horizontal">
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Ticket.Title)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Ticket.Title)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.User.FirstName)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.User.FirstName)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Comment)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Comment)
+                                </dd>
+
+                                <dt>
+                                    @Html.DisplayNameFor(model => model.Created)
+                                </dt>
+
+                                <dd>
+                                    @Html.DisplayFor(model => model.Created)
+                                </dd>
+
+                            </dl>
+                        </div>
+                        @*<div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Open
+                                <i class="fa fa-circle text-danger"></i> Bounce
+                                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                            </div>*@
+                        <hr>
+                        @*<div class="stats">
+                                    <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">Ticket Comments</h4>
+                        <p class="category">Comments for this ticket</p>
+                    </div>
+                    <div class="content">                        
+                        <h4>Leave a Comment:</h4>
+                        @if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+            {
+                            <form role="form" action="@Url.Action("CreateTicketComment", "Projects")" method="post">
+                                @Html.AntiForgeryToken()
+
+                                <div class="form-group">
+                                    <input type="hidden" name="postId" value="@Model.Id" style="">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="Body" rows="3"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <p><button type="submit" class="btn btn-default" data-error-message="Error!" data-sending-message="Sending..." data-ok-message="Comment Posted"><i class="icon-location-arrow"></i>Submit</button></p>
+                                </div>
+                            </form>
+                        }
+                        else {
+                            <p>Please <a href="@Url.Action("Login", "Account")">Log in</a> to leave a comment</p>
+                        }
+                        <!--comment list-->
+                        <!-- Comment -->
+                        @foreach (var comment in Model.Ticket.TicketComments)
+            {
+                            <div class="media">
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        @comment.User.DisplayName
+                                        <small>@comment.Created.LocalDateTime</small>
+                                    </h4>
+                                    @comment.Comment
+                                </div>
+                            </div>
+                            if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
+                            {
+                                <button class="btn btn-default" id="btnLeft">@Html.ActionLink("Edit comment", "EditTicketComment", "Projects", new { id = @comment.Id }, null)</button>
+                                <button class="btn btn-default" id="btnRight">@Html.ActionLink("Delete comment", "DeleteTicketComment", "Projects", new { id = @comment.Id }, null)</button>
+                                <div class="clearfix"></div>                }
+            }
+                        @*<div class="footer">
+                            <div class="legend">
+                                <i class="fa fa-circle text-info"></i> Open
+                                <i class="fa fa-circle text-danger"></i> Bounce
+                                <i class="fa fa-circle text-warning"></i> Unsubscribe
+                            </div>*@
+                        <hr>
+                        @*<div class="stats">
+                                    <i class="fa fa-clock-o"></i> Campaign sent 2 days ago
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+            

@@ -1,0 +1,252 @@
+﻿@model BugTracker.Models.Tickets
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+
+<div class="content" >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="header">
+                        <h4 class="title">@Model.Title</h4>
+                        <p class="category">Details for this ticket</p>
+                    </div>
+                    <div class="content">
+                            <table class="table myTable table-striped table-bordered table-responsive" style="width: 100%;" cellspacing="0" id="myTable">
+                                <thead>
+                                    <tr>
+                                        <th>@Html.DisplayNameFor(model => model.Project.Name)</th>
+                                        <th>@Html.DisplayNameFor(model => model.TicketPriority.Name)</th>
+                                        <th>@Html.DisplayNameFor(model => model.TicketStatus.Name)</th>
+                                        <th>@Html.DisplayNameFor(model => model.TicketType.Name)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Title)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Created)</th>
+                                        <th>@Html.DisplayNameFor(model => model.Updated)</th>
+                                        <th>@Html.DisplayNameFor(model => model.OwnerUserId)</th>
+                                        <th>@Html.DisplayNameFor(model => model.AssignedToUserId)</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>@Html.DisplayFor(model => model.Project.Name)</td>
+                                        <td>@Html.DisplayFor(model => model.TicketPriority.Name)</td>
+                                        <td>@Html.DisplayFor(model => model.TicketStatus.Name)</td>
+                                        <td>@Html.DisplayFor(model => model.TicketType.Name)</td>
+                                        <td>@Html.DisplayFor(model => model.Title)</td>
+                                        <td>@Html.DisplayFor(model => model.Description)</td>
+                                        <td>@Html.DisplayFor(model => model.Created.LocalDateTime)</td>
+                                        <td>@Html.DisplayFor(model => model.Updated)</td>
+                                        <td>@Html.DisplayFor(model => model.OwnerUser.DisplayName)</td>
+                                        <td>@Html.DisplayFor(model => model.AssignedToUser.DisplayName)</td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+                                        @Html.ActionLink("Back to List", "Index")
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>               
+                    <hr>                 
+                </div>
+            </div>
+      
+            <div class="col-md-10">
+                <div class="card">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#home">Ticket comments</a></li>
+                        <li><a data-toggle="tab" href="#menu1">Ticket Attachments</a></li>
+                        <li><a data-toggle="tab" href="#menu2">Ticket Histories</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="home" class="tab-pane fade in active">
+                            <div class="header">
+                                <h4 class="title">Ticket Comments</h4>
+                                <p class="category">Comments for this ticket</p>
+                            </div>
+                            <div class="content">
+
+                                <!--comment list-->
+                                <!-- Comment -->
+                                @foreach (var comment in Model.TicketComments)
+            {
+                                    <div class="media">
+                                        <div class="media-body">
+                                            <h4 class="media-heading">
+                                                @comment.User.DisplayName
+                                                <small>@comment.Created.LocalDateTime</small>
+                                            </h4>
+                                            @comment.Comment
+                                        </div>
+                                    </div>
+                                }
+                                <h4>Leave a Comment:</h4>
+                                @if (System.Web.HttpContext.Current.User.Identity.IsAuthenticated)
+                                {
+                                    <form role="form" action="@Url.Action("CreateTicketComment", "Tickets")" method="post">
+                                        @Html.AntiForgeryToken()
+
+                                        <div class="form-group">
+                                            <input type="hidden" name="TicketId" value="@Model.Id" style="">
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea class="form-control" name="Comment" rows="3"></textarea>
+                                        </div>
+                                        <div class="form-group">
+                                            <p><button type="submit" class="btn btn-default btn-sm" data-error-message="Error!" data-sending-message="Sending..." data-ok-message="Comment Posted"><i class="icon-location-arrow"></i>Submit</button></p>
+                                        </div>
+                                    </form>
+                                }
+                                else {
+                                    <p>Please <a href="@Url.Action("Login", "Account")">Log in</a> to leave a comment</p>
+                                }
+                                <hr>
+                            </div>
+                        </div>
+                        <div id="menu1" class="tab-pane fade">
+                            <div class="content">
+                                <h3>Ticket Attachments</h3>
+                                @{int i = 0;}
+                                @foreach (var item in Model.TicketAttachments)
+                                {
+                                    <div class="panel-group" id="accordion_@i">
+                                        <div class="panel panel-default" id-="panel_@i">
+                                            <div class="panel-heading">
+                                                <h4 class="panel-title">
+                                                    <a data-toggle="collapse" data-parent="#accordion_@i" href="#collapse1_@i">
+                                                        Attachment for this ticket
+                                                    </a>
+                                                </h4>
+                                            </div>
+                                            <div id="collapse1_@i" class="panel-collapse collapse in">
+                                                <div class="panel-body">
+                                                    <p>@item.Description</p> <br />
+                                                    @if (item.FileUrl != null)
+                                                    {
+                                                        <img class="img-responsive" src="@Url.Content(item.FileUrl)" alt="" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    i++;
+
+                                }
+
+
+
+
+
+
+
+                                @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                                {
+                                    @*<form role="form" action="@Url.Action("CreateTicketAttachments", "Tickets")" method="post">
+                                        @Html.AntiForgeryToken()*@
+                                using (Html.BeginForm("CreateTicketAttachments", "Tickets", FormMethod.Post, new { enctype = "Multipart/form-data" }))
+                                {
+                                    @Html.AntiForgeryToken()
+
+                                    @Html.Hidden("TicketId", Model.Id)
+
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TicketAttachments, htmlAttributes: new { @class = "control-label col-md-2" })
+                                        @*<div class="col-md-6">*@
+                                        <textarea class="form-control" name="Description" rows="3"></textarea>
+                                        @Html.ValidationMessageFor(model => model.TicketAttachments, "", new { @class = "text-danger" })
+                                        @*</div>*@
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TicketAttachments, htmlAttributes: new { @class = "control-label col-md-2" }) <br>
+                                        @*<div class="col-md-6">*@
+                                        <input name="image" type="file" class="form-control" id="fileUpload" />
+                                        @*@Html.EditorFor(model => model.MediaUrl, new { htmlAttributes = new { @class = "form-control" } })*@
+                                        @Html.ValidationMessageFor(model => model.TicketAttachments, "", new { @class = "text-danger" })
+                                        @*</div>*@
+                                    </div> <br>
+                                    <div class="form-group">
+                                        <p><button type="submit" class="btn btn-default btn-sm" data-error-message="Error!" data-sending-message="Sending..." data-ok-message="Comment Posted"><i class="icon-location-arrow"></i>Submit</button></p>
+                                    </div>
+                                    }
+                                }
+                                else {
+                                    <p> Please < a href = "@Url.Action("Login", "Account")" > Log in</ a > to leave a comment </p>
+                                    <div class="clearfix"></div>
+
+                                }
+                                <div class="clearfix"></div>
+
+
+                                <hr>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                        <div id="menu2" class="tab-pane fade">
+                            <div class="content">
+                                <h3>Ticket History for @Model.Title</h3>
+                                <table class="table myTable" id="myTable">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Property
+                                            </th>
+                                            <th>
+                                                Old Value
+                                            </th>
+                                            <th>
+                                                New Value
+                                            </th>
+                                            <th>
+                                                Date Changed
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.TicketHistories)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @item.Property
+                                                </td>
+                                                <td>
+                                                    @item.OldValue
+                                                </td>
+                                                <td>
+                                                    @item.NewValue
+                                                </td>
+                                                <td>
+                                                    @item.Changed.LocalDateTime
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div class="clearfix"></div>
+                                <hr>
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--End of ticket comments attachments histories card-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}
